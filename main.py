@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QApplication, QVBoxLayout, QLabel, QWidget, QGridLayout, \
-QLineEdit, QPushButton, QMainWindow, QTableWidget, QTableWidgetItem, QDialog
+QLineEdit, QPushButton, QMainWindow, QTableWidget, QTableWidgetItem, QDialog, QComboBox \
+
 from PyQt6.QtGui import QAction
 import sys
 import sqlite3
@@ -8,6 +9,8 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Student Management System")
+        self.setFixedHeight(300)
+        self.setFixedWidth(500)
 
         file_menu_item = self.menuBar().addMenu("&File")
         help_menu_item = self.menuBar().addMenu("&Help")
@@ -49,7 +52,52 @@ class MainWindow(QMainWindow):
 
 class InsertDialog(QDialog):
     def __init__(self):
-        super().__init__()       
+        super().__init__()    
+        self.setWindowTitle("Insert Student Data")
+        self.setFixedWidth(300)
+        self.setFixedHeight(300)
+
+        layout = QVBoxLayout()
+
+        #Widgets
+        self.student_name = QLineEdit()
+        self.student_name.setPlaceholderText("Name")
+        layout.addWidget(self.student_name)
+
+        self.course_name = QComboBox()
+        courses = ["Biology", "Math", "Astronomy", "Physics", "Literature"]
+        self.course_name.addItems(courses)
+        layout.addWidget(self.course_name)
+
+        self.mobile = QLineEdit()
+        self.mobile.setPlaceholderText("Mobile")
+        layout.addWidget(self.mobile)
+        
+        #Input
+        button = QPushButton("Register")
+        button.clicked.connect(self.add_student)
+        layout.addWidget(button)
+
+        self.setLayout(layout)
+
+    def add_student(self):
+        #We need to connect with the data base
+        connection = sqlite3.connect("database.db")
+        cursor = connection.cursor()
+        
+        #Variables
+        name = self.student_name.text()
+        course = self.course_name.itemText(self.course_name.currentIndex())
+        mobile = self.mobile.text()
+
+
+        cursor.execute("INSERT INTO students (name, course, mobile) VALUES (?, ?, ?)",
+                       (name, course, mobile))
+        connection.commit()
+        cursor.close()
+        connection.close()
+        w.load_data()
+        
 
 
 
