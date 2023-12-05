@@ -26,6 +26,9 @@ class MainWindow(QMainWindow):
         help_menu_item.addAction(about_action)
         help_menu_item.addAction(help_action)
 
+        #About Action
+        about_action.triggered.connect(self.about)
+
         search_action = QAction(QIcon("icons/search.png"), "Search", self)
         search_action.triggered.connect(self.search)
         search_menu_item.addAction(search_action)
@@ -96,6 +99,9 @@ class MainWindow(QMainWindow):
         delete = DeleteDialog() 
         delete.exec()
 
+    def about(self):
+        dialog = AboutDialog()
+        dialog.exec()
 
 class InsertDialog(QDialog):
     def __init__(self):
@@ -267,7 +273,15 @@ class DeleteDialog(QDialog):
         confirmation_widget.setText("The record was deleted")
         confirmation_widget.exec()
 
-
+class AboutDialog(QMessageBox):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("About")
+        content = """
+        This App was made by Andrés Lozano, using OOT. Hope you found it interesting.
+        """
+        self.setText(content)
+    
 
 
 
