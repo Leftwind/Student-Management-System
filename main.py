@@ -14,6 +14,8 @@ class MainWindow(QMainWindow):
 
         file_menu_item = self.menuBar().addMenu("&File")
         help_menu_item = self.menuBar().addMenu("&Help")
+        search_menu_item = self.menuBar().addMenu("&Search")
+        
 
         add_student_action = QAction("Add Student", self)
         add_student_action.triggered.connect(self.insert)
@@ -21,6 +23,11 @@ class MainWindow(QMainWindow):
 
         about_action = QAction("About", self)
         help_menu_item.addAction(about_action)
+
+        search_action = QAction("Search", self)
+        search_action.triggered.connect(self.search)
+        search_menu_item.addAction(search_action)
+        
 
         #Table Menu too use in load_data()
         self.table = QTableWidget()
@@ -48,6 +55,10 @@ class MainWindow(QMainWindow):
     def insert(self):
         dialog = InsertDialog()
         dialog.exec()
+
+    def search(self):
+        search = SearchItem()
+        search.exec()    
 
 
 class InsertDialog(QDialog):
@@ -98,6 +109,31 @@ class InsertDialog(QDialog):
         connection.close()
         w.load_data()
         
+class SearchItem(QDialog):
+    def __init__(self):
+        super().__init__()    
+        self.setWindowTitle("Insert Student Data")
+        self.setFixedWidth(300)
+        self.setFixedHeight(300)
+
+        layout = QVBoxLayout()
+
+
+        #Widgets
+        searchbar = QLineEdit()
+        searchbar.setPlaceholderText("Search")
+        layout.addWidget(searchbar)
+
+        button = QPushButton("Search")
+        button.clicked.connect(self.search_bar)
+        layout.addWidget(button)
+
+        self.setLayout(layout)
+
+
+    def search_bar(self):
+        pass
+
 
 
 
